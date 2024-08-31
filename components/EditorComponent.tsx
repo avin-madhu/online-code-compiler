@@ -1,5 +1,5 @@
-"use client";
-import React, { useRef, useState } from "react";
+"use client"
+import React, { useRef, useState} from "react";
 import { ModeToggleBtn } from "./mode-toggle-btn";
 import SelectLanguages, {
   selectedLanguageOptionProps,
@@ -16,9 +16,12 @@ import { Loader, Play, TriangleAlert } from "lucide-react";
 import { codeSnippets, languageOptions } from "@/config/config";
 import { compileCode } from "@/actions/compile";
 import toast from "react-hot-toast";
+import QuestionComponent from "./QuestionComponent";
+
 export interface CodeSnippetsProps {
   [key: string]: string;
 }
+
 export default function EditorComponent() {
   const { theme } = useTheme();
   const [sourceCode, setSourceCode] = useState(codeSnippets["javascript"]);
@@ -28,6 +31,7 @@ export default function EditorComponent() {
   const [err, setErr] = useState(false);
   // const language = languageOption.language;
   // console.log(language);
+
   const editorRef = useRef(null);
   // console.log(sourceCode);
   function handleEditorDidMount(editor: any) {
@@ -69,92 +73,120 @@ export default function EditorComponent() {
       console.log(error);
     }
   }
-  // console.log(languageOption);
+
+  const question = {
+    title: "Your Question Title Here",
+    description: "Problem description goes here...",
+    examples: [
+      {
+        input: "Example Input 1",
+        output: "Example Output 1",
+        explanation: "Explanation for Example 1 (optional)",
+      },
+      {
+        input: "Example Input 2",
+        output: "Example Output 2",
+        explanation: "Explanation for Example 2 (optional)",
+      },
+    ],
+    constraints: [
+      "Constraint 1",
+      "Constraint 2",
+      "Constraint 3",
+    ],
+  };
+
   return (
     <div className="min-h-screen dark:bg-slate-900 rounded-2xl shadow-2xl py-6 px-8">
       {/* EDITOR HEADER */}
       <div className="flex items-center justify-between pb-3">
-        <h2 className="scroll-m-20  text-2xl font-semibold tracking-tight first:mt-0">
-          Codex
+        <h2 className="scroll-m-20  text-2xl font-semibold tracking-tight first:mt-0">
+          NahBruh
         </h2>
         <div className="flex items-center space-x-2 ">
           <ModeToggleBtn />
           <div className="w-[230px]">
-            <SelectLanguages
-              onSelect={onSelect}
-              selectedLanguageOption={languageOption}
-            />
+            <SelectLanguages onSelect={onSelect} selectedLanguageOption={languageOption} />
           </div>
         </div>
       </div>
-      {/* EDITOR  */}
-      <div className="bg-slate-400 dark:bg-slate-950 p-3 rounded-2xl">
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="w-full rounded-lg border dark:bg-slate-900"
-        >
-          <ResizablePanel defaultSize={50} minSize={35}>
-            <Editor
-              theme={theme === "dark" ? "vs-dark" : "vs-light"}
-              height="100vh"
-              defaultLanguage={languageOption.language}
-              defaultValue={sourceCode}
-              onMount={handleEditorDidMount}
-              value={sourceCode}
-              onChange={handleOnchange}
-              language={languageOption.language}
-            />
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={50} minSize={35}>
-            {/* Header */}
-            <div className="space-y-3 bg-slate-300 dark:bg-slate-900 min-h-screen">
-              <div className="flex items-center justify-between  bg-slate-400 dark:bg-slate-950 px-6 py-2">
-                <h2>Output</h2>
-                {loading ? (
-                  <Button
-                    disabled
-                    size={"sm"}
-                    className="dark:bg-purple-600 dark:hover:bg-purple-700 text-slate-100 bg-slate-800 hover:bg-slate-900"
-                  >
-                    <Loader className="w-4 h-4 mr-2 animate-spin" />
-                    <span>Running please wait...</span>
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={executeCode}
-                    size={"sm"}
-                    className="dark:bg-purple-600 dark:hover:bg-purple-700 text-slate-100 bg-slate-800 hover:bg-slate-900"
-                  >
-                    <Play className="w-4 h-4 mr-2 " />
-                    <span>Run</span>
-                  </Button>
-                )}
+
+      {/* EDITOR and QUESTION in the same row */}
+      <div className="flex flex-row">
+        {/* Question Component */}
+        <div className="w-1/2 p-4 overflow-y-auto">
+          <QuestionComponent question={question} />
+        </div>
+
+        {/* Editor */}
+        <div className="w-1/2 flex flex-col">
+          <ResizablePanelGroup
+            direction="vertical"
+            className="w-full rounded-lg border dark:bg-slate-900"
+          >
+            <ResizablePanel defaultSize={50} minSize={35}>
+              <Editor
+                theme={theme === "dark" ? "vs-dark" : "vs-light"}
+                height="100vh"
+                defaultLanguage={languageOption.language}
+                defaultValue={sourceCode}
+                onMount={handleEditorDidMount}
+                value={sourceCode}
+                onChange={handleOnchange}
+                language={languageOption.language}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={50} minSize={35}>
+              {/* Header */}
+              <div className="space-y-3 bg-slate-300 dark:bg-slate-900 min-h-screen">
+                <div className="flex items-center justify-between  bg-slate-400 dark:bg-slate-950 px-6 py-2">
+                  <h2>Output</h2>
+                  {loading ? (
+                    <Button
+                      disabled
+                      size={"sm"}
+                      className="dark:bg-purple-600 dark:hover:bg-purple-700 text-slate-100 bg-slate-800 hover:bg-slate-900"
+                    >
+                      <Loader className="w-4 h-4 mr-2 animate-spin" />
+                      <span>Running please wait...</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={executeCode}
+                      size={"sm"}
+                      className="dark:bg-purple-600 dark:hover:bg-purple-700 text-slate-100 bg-slate-800 hover:bg-slate-900"
+                    >
+                      <Play className="w-4 h-4 mr-2 " />
+                      <span>Run</span>
+                    </Button>
+                  )}
+                </div>
+                <div className=" px-6 space-y-2">
+                  {err ? (
+                    <div className="flex items-center space-x-2 text-red-500 border border-red-600 px-6 py-6">
+                      <TriangleAlert className="w-5 h-5 mr-2 flex-shrink-0" />
+                      <p className="text-xs">
+                        Failed to Compile the Code , Please try again !
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {output.map((item) => {
+                        return (
+                          <p className="text-sm" key={item}>
+                            {item}
+                          </p>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
               </div>
-              <div className=" px-6 space-y-2">
-                {err ? (
-                  <div className="flex items-center space-x-2 text-red-500 border border-red-600 px-6 py-6">
-                    <TriangleAlert className="w-5 h-5 mr-2 flex-shrink-0" />
-                    <p className="text-xs">
-                      Failed to Compile the Code , Please try again !
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {output.map((item) => {
-                      return (
-                        <p className="text-sm" key={item}>
-                          {item}
-                        </p>
-                      );
-                    })}
-                  </>
-                )}
-              </div>
-            </div>
-            {/* Body */}
-          </ResizablePanel>
-        </ResizablePanelGroup>
+              {/* Body */}
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
       </div>
     </div>
   );
