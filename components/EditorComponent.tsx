@@ -119,7 +119,7 @@ export default function EditorComponent() {
         </div>
 
         {/* Editor */}
-        <div className="w-1/2 flex flex-col">
+        <div className="w-2/3 flex flex-col">
           <ResizablePanelGroup
             direction="vertical"
             className="w-full rounded-lg border dark:bg-slate-900"
@@ -142,6 +142,7 @@ export default function EditorComponent() {
               <div className="space-y-3 bg-slate-300 dark:bg-slate-900 min-h-screen">
                 <div className="flex items-center justify-between  bg-slate-400 dark:bg-slate-950 px-6 py-2">
                   <h2>Output</h2>
+                  <div className="mt-4">
                   {loading ? (
                     <Button
                       disabled
@@ -161,7 +162,12 @@ export default function EditorComponent() {
                       <span>Run</span>
                     </Button>
                   )}
+                  <Button style={{marginLeft: '20px', marginBottom: '5px', paddingBottom: '5px'}} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+                    Submit Code
+                  </Button>
                 </div>
+                </div>
+                
                 <div className=" px-6 space-y-2">
                   {err ? (
                     <div className="flex items-center space-x-2 text-red-500 border border-red-600 px-6 py-6">
@@ -191,3 +197,4 @@ export default function EditorComponent() {
     </div>
   );
 }
+
